@@ -15,8 +15,9 @@ func newListener(port string) Listener {
 }
 
 func (lst *Listener) Spawn() {
-	http.HandleFunc("/", lst.HandleSlash)
-	http.ListenAndServe(":"+lst.Port, nil)
+	testMux := http.NewServeMux()
+	testMux.HandleFunc("/", lst.HandleSlash)
+	go http.ListenAndServe(":"+lst.Port, testMux)
 }
 
 func (lst *Listener) HandleSlash(w http.ResponseWriter, r *http.Request) {
