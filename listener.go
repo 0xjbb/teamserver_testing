@@ -1,14 +1,24 @@
 package main
 
+import (
+	"io"
+	"net/http"
+)
+
 type Listener struct {
-	name string
-	port string
+	Name string
+	Port string
 }
 
-func newListener() Listener {
-	return Listener{}
+func newListener(port string) Listener {
+	return Listener{Port: port}
 }
 
-func (*Listener) Spawn() {
+func (lst *Listener) Spawn() {
+	http.HandleFunc("/", lst.HandleSlash)
+	http.ListenAndServe(":"+lst.Port, nil)
+}
 
+func (lst *Listener) HandleSlash(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "This a teamserver arch test! On port "+lst.Port+"\n")
 }
